@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+
+  "icons": {
+      "128": "e_big.png" 
+    },
+
+  "name": "ЕКИС — авторизация",
+  "short_name": "EKIS Auth",
+  "description": "Авторизация в личный кабинет руководителя образовательной организации города Москвы по паролю сотрудника из школьной базы.",
+  "version": "0.3",
+
+  "content_scripts": [
+    {
+      "matches": ["http://lk.educom.ru/*"],
+      "js": ["patch.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+
+  "permissions": [
+    "storage",
+    "cookies",
+    "http://lk.educom.ru/*",
+    "http://ms45.edu.ru/ekis_auth/*"
+  ], 
+
+  "web_accessible_resources": [
+    "spinner.gif"
+  ],
+
+  "browser_action": {
+    "default_icon": {
+      "32": "e.png"
+    },
+    "default_title": "ЕКИС - авторизация",
+    "default_popup": "popup.html"
+  }
+}

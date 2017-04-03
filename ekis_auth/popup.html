@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ЕКИС - авторизация</title>
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+        overflow: hidden;
+        max-width: 400px;
+        min-width: 200px;
+        background: url("http://lk.educom.ru/templates/login/img/bkg.png");
+
+      }
+      input.tab {
+          position: absolute;
+          right: 100%;
+      }
+      input:checked + div.tab {
+          display: block;
+      }
+      div.tab{
+          display: none;
+          background-color: #ffffff;
+          border-bottom-left-radius: 4px;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+          padding: 10px;
+      }
+      form label{
+          display: block;
+          margin: 0 0 .28571429rem;
+          color: rgba(0,0,0,.87);
+          font-size: .92857143em;
+          font-weight: 700;
+          text-transform: none;
+      }
+      form input{
+        margin-top: 0px;
+        margin-bottom: 10px;
+        outline: 0;
+        tap-highlight-color: rgba(255,255,255,0);
+        font-size: 1em;
+        background: #fff;
+        border: 1px solid rgba(34,36,38,.15);
+        color: rgba(0,0,0,.87);
+        border-radius: .28571429rem;
+        box-shadow: 0 0 0 0 transparent inset;
+        transition: color .1s ease,border-color .1s ease;
+      }
+      form button{
+        box-shadow: 0 0 0 1px #3b88c3 inset, 0 2px 0 rgba(255,255,255,.15) inset;
+        background-color: #55acee;
+        color: #fff;
+        text-shadow: none;
+        background-image: linear-gradient(transparent,rgba(0,0,0,.05));
+        font-size: 1rem;
+        cursor: pointer;
+        display: inline-block;
+        min-height: 1em;
+        outline: 0;
+        border: none;
+        vertical-align: baseline;
+        background: -webkit-linear-gradient(#fff,#f5f8fa) #f5f8fa;
+        background: linear-gradient(#fff,#f5f8fa) #f5f8fa;
+        color: #333;
+        font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+        margin: 0 .25em 0 0;
+        padding: .8571em 1.284em;
+        text-transform: none;
+        text-shadow: none;
+        font-weight: 700;
+        line-height: 1em;
+        font-style: normal;
+        text-align: center;
+        text-decoration: none;
+        border-radius: .28571429rem;
+        box-shadow: 0 0 0 1px #e1e8ed inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+        user-select: none;
+        transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
+      }
+      #spinner_img{
+        display: none;
+      }
+      #spinner{
+        margin-bottom: 10px;
+      }
+      #system-message-container{
+        color: #b58105;
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+      #system-message-container div{
+        background-color: #fff8db;
+        padding-bottom: 8px;
+        padding-top: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0;
+        border-radius: 4px;
+        padding: 10px;
+      }
+      #system-message-container h4{
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: #fff8db;
+        margin: 0;
+      }
+      label.tab{
+        background-color: #ffffff;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        padding-top: 4px;
+        padding-right: 4px;
+        padding-left: 4px;
+        margin-bottom: 4px;
+      }
+      #settings {
+        background-color: #eeeeee;
+      }
+      #settings_tab_label {
+        background-color: #eeeeee;
+      }
+    </style>
+    <script type="text/javascript" src="popup.js"></script>
+  </head>
+  <body>
+    <label class="tab" for="ekis_tab">Вход</label>
+    <label class="tab" for="settings_tab" id='settings_tab_label'>Настройки</label>
+    <input class="tab" type="radio" id="ekis_tab" name="tab" checked="checked" />
+    <div class="tab">
+      <form id="login_form">
+        <div id='system-message-container'></div>
+        <label for="login_username">Логин</label><input id="login_username" /></br>
+        <label for="login_password">Пароль</label><input type="password" id="login_password" />
+        <div id="spinner" style="display: block; text-align: center;"><img id="spinner_img" alt="Please wait" style="margin: auto; width: 64px;"/></div>
+        <button id="login_do" type="submit">Войти</button>
+      </form>
+    </div>
+    <input class="tab" type="radio" id="settings_tab" name="tab" />
+    <div class="tab" id="settings">
+      <form id="settings_form">
+        <label for="settings_url">URL для авторизации</label><input id="settings_url" />
+        <button id="settings_save" type="submit">Сохранить</button>
+      </form>
+    </div>
+  </body>
+</html>
