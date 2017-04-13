@@ -1,0 +1,18 @@
+{
+	"ekis_url": "http://lk.educom.ru",
+	"ekis_username": "changeme",
+	"ekis_password": "secret",
+
+	"ldap_servers": [
+		{
+			"host": "ldap1.example.com",
+			"port": 636,
+			"ssl": true
+		}
+	],
+
+	"ldap_filter": "objectClass=*",
+	"ldap_login_attribute": "cn",
+
+	"ldap_scope": "subtree"
+}
