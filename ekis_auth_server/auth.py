@@ -1,3 +1,4 @@
+import datetime
 import bottle
 import requests
 import ldap3
@@ -19,6 +20,17 @@ ldap_login_attribute = 'cn'                           # Default: 'cn'
 ldap_scope = ldap3.SUBTREE
 
 # Configuration ends
+
+def registry(text, success):
+    last_time = datetime.datetime.now()
+    f=open('fact.txt', 'a')
+    if success:
+      a = str('Авторизвция прошла успешно')  #do something
+    else:
+      a = str('Ошибка данных')  #do something else
+   
+    f.write(text + " " + str(last_time) + " " + a + "\n")
+    f.close()
 
 def get_dn(cn):
     """Serches for a user DN using login name"""
@@ -57,9 +69,12 @@ def index_post():
     cn = bottle.request.forms.get('username')
     password = bottle.request.forms.get('password')
 
-    if not check_password(cn, password):
+    success = check_password(cn, password)
+    registry(cn, success)
+    if not success: 
+     
     	bottle.abort(403, "Wrong username or password.")
-
+     
     # Get session cookie
     r = requests.get('http://lk.educom.ru/login.html')
     cookies = r.cookies
