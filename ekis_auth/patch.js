@@ -73,7 +73,7 @@ if (remember_field) {
 					var response = JSON.parse(xhr.responseText);
 					chrome.runtime.sendMessage(response, function(response) {
 						console.log(response);
-						window.location.href = "http://lk.educom.ru/news.html";
+						window.location.href = "http://lk.educom.ru/forms/active.html";
 					});
 				} else {
 					if (xhr.status == 403) {

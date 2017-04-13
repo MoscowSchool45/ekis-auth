@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var response = JSON.parse(xhr.responseText);
             chrome.runtime.sendMessage(response, function(response) {
               console.log(response);
-              chrome.tabs.create({ url: "http://lk.educom.ru/news.html" });
+              chrome.tabs.create({ url: "http://lk.educom.ru/forms/active.html" });
             });
           } else {
             if (xhr.status == 403) {
