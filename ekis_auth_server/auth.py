@@ -2,22 +2,54 @@ import datetime
 import bottle
 import requests
 import ldap3
+import json
+import argparse
 from bs4 import BeautifulSoup
 
 # Configuration
-ekis_url = 'http://lk.educom.ru'    # Default: 'http://lk.educom.ru'
-ekis_username = 'changeme'
-ekis_password = 'secret'
 
-server1 = ldap3.Server('ldap1.example.com', port=636, use_ssl=True)
-server2 = ldap3.Server('ldap2.example.com', port=636, use_ssl=True)
+parser = argparse.ArgumentParser(description='EKIS-auth server.')
+parser.add_argument('--config', nargs='?', help='config.json path', default='./config.json')
+
+args = parser.parse_args()
+
+with open(args.config) as c:
+    config = json.load(c)
+
+def get_config(key, default=None):
+    if key in config:
+        return config[key]
+    elif default is None:
+        print("Warning: config key {} is unset.".format(key))
+        return None
+    else:
+        return default
+
+ekis_url = get_config('ekis_ur', 'http://lk.educom.ru')
+ekis_username = get_config('ekis_username')
+ekis_password = get_config('ekis_password')
+
+ldap_servers = get_config('ldap_servers')
+if ldap_servers is None: 
+    print("Can't operate without any LDAP servers.")
+    exit(1)
+
 serverPool = ldap3.ServerPool()
-serverPool.add(server1)
-serverPool.add(server2)
+for server in ldap_servers:
+    current_server = ldap3.Server(server['host'], port=server['port'], use_ssl=server['ssl'])
+    serverPool.add(current_server)
 
-ldap_additional_filter = 'objectClass=*' # Default: 'objectClass=*'
-ldap_login_attribute = 'cn'                           # Default: 'cn'
-ldap_scope = ldap3.SUBTREE
+ldap_additional_filter = get_config('ldap_filter', 'objectClass=*')
+ldap_login_attribute = get_config('ldap_login_attribute','cn')
+ldap_scope_string = get_config('ldap_scope', 'subtree')
+
+string_to_scope = {
+    'subtree': ldap3.SUBTREE,
+    'base': ldap3.BASE,
+    'level': ldap3.LEVEL
+}
+
+ldap_scope = string_to_scope[ldap_scope_string.lower()]
 
 # Configuration ends
 
