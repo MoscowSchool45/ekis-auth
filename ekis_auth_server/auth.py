@@ -5,11 +5,14 @@ import ldap3
 import json
 import argparse
 from bs4 import BeautifulSoup
+import os
+
+default_config_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], "config.json")
 
 # Configuration
 
 parser = argparse.ArgumentParser(description='EKIS-auth server.')
-parser.add_argument('--config', nargs='?', help='config.json path', default='./config.json')
+parser.add_argument('--config', nargs='?', help='config.json path', default=default_config_file)
 
 args = parser.parse_args()
 
@@ -48,6 +51,8 @@ string_to_scope = {
     'base': ldap3.BASE,
     'level': ldap3.LEVEL
 }
+
+log_file = get_config('log_filename', 'fact.txt')
 
 ldap_scope = string_to_scope[ldap_scope_string.lower()]
 
