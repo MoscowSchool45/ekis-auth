@@ -51,15 +51,17 @@ string_to_scope = {
 
 ldap_scope = string_to_scope[ldap_scope_string.lower()]
 
+log_path = get_config('log_file_path', 'fact.txt')
+                             
 # Configuration ends
 
 def registry(text, success):
     last_time = datetime.datetime.now()
-    f=open('fact.txt', 'a')
+    f=open(log_path, 'a')
     if success:
       a = str('Авторизвция прошла успешно')  #do something
     else:
-      a = str('Ошибка данных')  #do something else
+      a = str('Неверный логин или пароль')  #do something else
    
     f.write(text + " " + str(last_time) + " " + a + "\n")
     f.close()
