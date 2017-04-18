@@ -5,14 +5,11 @@ import ldap3
 import json
 import argparse
 from bs4 import BeautifulSoup
-import os
-
-default_config_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], "config.json")
 
 # Configuration
 
 parser = argparse.ArgumentParser(description='EKIS-auth server.')
-parser.add_argument('--config', nargs='?', help='config.json path', default=default_config_file)
+parser.add_argument('--config', nargs='?', help='config.json path', default='./config.json')
 
 args = parser.parse_args()
 
@@ -52,24 +49,24 @@ string_to_scope = {
     'level': ldap3.LEVEL
 }
 
-log_file = get_config('log_filename', 'fact.txt')
-
 ldap_scope = string_to_scope[ldap_scope_string.lower()]
 
 log_path = get_config('log_file_path', 'fact.txt')
+
+log=open(log_path, 'a', 1)
                              
 # Configuration ends
 
 def registry(text, success):
     last_time = datetime.datetime.now()
-    f=open(log_path, 'a')
+    #f=open(log_path, 'a', 1)
     if success:
       a = str('Авторизвция прошла успешно')  #do something
     else:
       a = str('Неверный логин или пароль')  #do something else
    
-    f.write(text + " " + str(last_time) + " " + a + "\n")
-    f.close()
+    log.write(text + " " + str(last_time) + " " + a + "\n")
+    #f.close()
 
 def get_dn(cn):
     """Serches for a user DN using login name"""
