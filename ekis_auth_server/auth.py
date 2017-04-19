@@ -51,6 +51,8 @@ string_to_scope = {
 
 ldap_scope = string_to_scope[ldap_scope_string.lower()]
 
+username_handling = get_config('username_handling', '@ms45.edu.ru')
+
 log_path = get_config('log_file_path', 'fact.txt')
 
 log=open(log_path, 'a', 1)
@@ -103,6 +105,7 @@ def index():
 def index_post():
     """Checks username and password, authenticate to EKIS and send cookies"""
     cn = bottle.request.forms.get('username')
+    cn = cn if cn.find('username_handling') == -1 else cn[0:cn.find('username_handling')]
     password = bottle.request.forms.get('password')
 
     success = check_password(cn, password)
