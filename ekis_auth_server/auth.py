@@ -5,11 +5,13 @@ import ldap3
 import json
 import argparse
 from bs4 import BeautifulSoup
+import os
 
 # Configuration
 
 parser = argparse.ArgumentParser(description='EKIS-auth server.')
-parser.add_argument('--config', nargs='?', help='config.json path', default='./config.json')
+default_config_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'config.json')
+parser.add_argument('--config', nargs='?', help='config.json path', default=default_config_path)
 
 args = parser.parse_args()
 
