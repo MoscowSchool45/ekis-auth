@@ -25,7 +25,7 @@ def get_config(key, default=None):
     else:
         return default
 
-ekis_url = get_config('ekis_ur', 'http://lk.educom.ru')
+ekis_url = get_config('ekis_url', 'http://lk.educom.ru')
 ekis_username = get_config('ekis_username')
 ekis_password = get_config('ekis_password')
 
@@ -60,15 +60,14 @@ log=open(log_path, 'a', 1)
 # Configuration ends
 
 def registry(text, success):
+    """Write info to log file"""
     last_time = datetime.datetime.now()
-    #f=open(log_path, 'a', 1)
     if success:
-      a = str('Авторизвция прошла успешно')  #do something
+      a = str('Авторизвция прошла успешно')
     else:
-      a = str('Неверный логин или пароль')  #do something else
+      a = str('Неверный логин или пароль')
    
     log.write(text + " " + str(last_time) + " " + a + "\n")
-    #f.close()
 
 def get_dn(cn):
     """Serches for a user DN using login name"""
@@ -105,7 +104,7 @@ def index():
 def index_post():
     """Checks username and password, authenticate to EKIS and send cookies"""
     cn = bottle.request.forms.get('username')
-    cn = cn if cn.find('username_handling') == -1 else cn[0:cn.find('username_handling')]
+    cn = cn if cn.find(username_handling) == -1 else cn[0:cn.find(username_handling)]
     password = bottle.request.forms.get('password')
 
     success = check_password(cn, password)

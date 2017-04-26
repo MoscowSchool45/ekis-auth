@@ -14,5 +14,7 @@
 	"ldap_filter": "objectClass=*",
 	"ldap_login_attribute": "cn",
 
-	"ldap_scope": "subtree"
+	"ldap_scope": "subtree",
+
+	"username_handling": "@example.com"
 }
