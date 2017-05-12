@@ -26,7 +26,7 @@
     "storage",
     "cookies",
     "http://lk.educom.ru/*",
-    "http://ms45.edu.ru/ekis_auth/*",
+    "http://ms45.edu.ru/ekis_auth/*"
   ],
 
   "web_accessible_resources": [
