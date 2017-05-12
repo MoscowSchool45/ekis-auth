@@ -1,4 +1,5 @@
 var DEFAULT_URL = 'https://ms45.edu.ru/ekis_auth/';
+var DEFAULT_REDIRECT = "http://lk.educom.ru/forms/active.html";
 
 document.addEventListener('DOMContentLoaded', function() {
   var settings_url = document.getElementById("settings_url");
@@ -37,6 +38,21 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
     } else {
       chrome.storage.sync.set({"ekisAuthURL": settings_url.value});
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', settings_url.value, true);
+      xhr.addEventListener("readystatechange", function(e){
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            chrome.storage.sync.set({"ekisAuthRedirect": response.data.redirect});
+            chrome.storage.sync.set({"ekisAuthHidePasswords": response.data.hide_saved_passwords});
+            chrome.storage.sync.set({"ekisAuthSystem": response.data.system});
+            window.location.reload(false);
+          }
+        }
+      }, false);
+      xhr.send()
+      event.preventDefault();
     }
   }, false);
 
@@ -59,7 +75,13 @@ document.addEventListener('DOMContentLoaded', function() {
             var response = JSON.parse(xhr.responseText);
             chrome.runtime.sendMessage(response, function(response) {
               console.log(response);
-              chrome.tabs.create({ url: "http://lk.educom.ru/forms/active.html" });
+              	chrome.storage.sync.get("ekisAuthRedirect", function(items) {
+                    if (typeof items.ekisAuthRedirect !== 'undefined') {
+                        chrome.tabs.create({ url: items.ekisAuthRedirect });
+                    } else {
+                        chrome.tabs.create({ url: DEFAULT_REDIRECT });
+                    }
+                })
             });
           } else {
             if (xhr.status == 403) {

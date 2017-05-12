@@ -18,6 +18,7 @@ args = parser.parse_args()
 with open(args.config) as c:
     config = json.load(c)
 
+
 def get_config(key, default=None):
     if key in config:
         return config[key]
@@ -26,6 +27,7 @@ def get_config(key, default=None):
         return None
     else:
         return default
+
 
 ekis_url = get_config('ekis_url', 'http://lk.educom.ru')
 ekis_username = get_config('ekis_username')
@@ -58,8 +60,11 @@ username_handling = get_config('username_handling', '@ms45.edu.ru')
 log_path = get_config('log_file_path', 'fact.txt')
 
 log=open(log_path, 'a', 1)
+
+client_config_data = get_config('client', {})
                              
 # Configuration ends
+
 
 def registry(text, success):
     """Write info to log file"""
@@ -70,6 +75,7 @@ def registry(text, success):
       a = str('Неверный логин или пароль')
    
     log.write(text + " " + str(last_time) + " " + a + "\n")
+
 
 def get_dn(cn):
     """Serches for a user DN using login name"""
@@ -86,21 +92,24 @@ def get_dn(cn):
     else:
         return r[0]['dn']
 
+
 def check_password(cn, password):
     """Tries to authenticate, returns True if successful"""
     dn = get_dn(cn)
     if dn == '':
-    	return False
+        return False
     try:
         testConnection = ldap3.Connection(serverPool, user=dn, password=password, auto_bind=True)
     except ldap3.core.exceptions.LDAPBindError:
         return False
     return True
 
+
 @bottle.get('/')
 def index():
-    """Returns error message, since no password or username is not provided through GET"""
-    bottle.abort(403, "Wrong username or password.")
+    """Returns client config"""
+    return {'data': client_config_data}
+
 
 @bottle.post('/')
 def index_post():
@@ -111,9 +120,8 @@ def index_post():
 
     success = check_password(cn, password)
     registry(cn, success)
-    if not success: 
-     
-    	bottle.abort(403, "Wrong username or password.")
+    if not success:
+        bottle.abort(403, "Wrong username or password.")
      
     # Get session cookie
     r = requests.get('http://lk.educom.ru/login.html')
@@ -136,7 +144,7 @@ def index_post():
 
     # Use all the default values
     for i in fields:
-    	data[i['name']] = i['value']
+        data[i['name']] = i['value']
 
     # Override authenticatino info
     data['username'] = ekis_username
@@ -151,10 +159,11 @@ def index_post():
     # Dump all cookies
     result = []
     for cookie in cookies:
-    	result.append( {'name': cookie.name, 'value': cookie.value} )
+        result.append({'name': cookie.name, 'value': cookie.value})
 
     # Return JSON
     return {'data': result}
+
 
 # For use with WSGI
 app = bottle.default_app()

@@ -1,4 +1,5 @@
 var DEFAULT_URL = 'https://ms45.edu.ru/ekis_auth/';
+var DEFAULT_REDIRECT = "http://lk.educom.ru/forms/active.html"
 
 var cookies = document.cookie.split(/;\s+/);
 
@@ -20,7 +21,7 @@ if (remember_field) {
 
 	var buttons = form.getElementsByTagName("button");
 
-	document.body.children[0].children[0].children[0].children[1].children[0].children[0].innerHTML = "Сайт отключен от «Единой системы авторизации Департамента образования города Москвы» (что бы это не значило) и подключен к системе авторизации Гимназии № 45.";
+	document.body.children[0].children[0].children[0].children[1].children[0].children[0].innerHTML = "Сайт отключен от «Единой системы авторизации Департамента образования города Москвы» (что бы это не значило).";
 
 	function show_error(text) {
 		var error_message_display = document.getElementById("system-message-container");
@@ -43,10 +44,28 @@ if (remember_field) {
 		console.log(url);
 	})
 
+	chrome.storage.sync.get("ekisAuthSystem", function(items) {
+		if (typeof items.ekisAuthSystem !== 'undefined') {
+			system = items.ekisAuthSystem;
+	        document.body.children[0].children[0].children[0].children[1].children[0].children[0].innerHTML =
+	        "Сайт отключен от «Единой системы авторизации Департамента образования города Москвы» (что бы это не значило) и "+
+	        system+".";
+		}
+	})
+
+	var redirect;
+	chrome.storage.sync.get("ekisAuthRedirect", function(items) {
+		if (typeof items.ekisAuthRedirect !== 'undefined') {
+			redirect = items.ekisAuthRedirect;
+		} else {
+			redirect = DEFAULT_REDIRECT;
+		}
+	})
+
 	form.addEventListener("submit", function(event) {
 		event.preventDefault();
 
-		if (typeof url === 'undefined') {
+		if (typeof url === 'undefined' | typeof redirect === 'undefined') {
 			return false;
 		}
 
@@ -73,7 +92,7 @@ if (remember_field) {
 					var response = JSON.parse(xhr.responseText);
 					chrome.runtime.sendMessage(response, function(response) {
 						console.log(response);
-						window.location.href = "http://lk.educom.ru/forms/active.html";
+						window.location.href = redirect;
 					});
 				} else {
 					if (xhr.status == 403) {
@@ -102,15 +121,24 @@ if (remember_field) {
 	}, false);
 }
 
-var menus = document.getElementsByClassName("vertical menu ui")
-if (menus.length !== 0) {
-	// Try to remove "stored passwords" link
-	for (m=0; m<menus.length; m++) {
-		links = menus[m].getElementsByTagName("a")
-		for (l=0; l<links.length; l++) {
-			if (links[l].href === 'http://lk.educom.ru/passwords.html') {
-				links[l].parentElement.removeChild(links[l]);
-			}
-		}
-	}
-}
+chrome.storage.sync.get("ekisAuthHidePasswords", function(items) {
+    var hide_password = true;
+    if (typeof items.ekisAuthHidePasswords !== 'undefined') {
+        hide_password = items.ekisAuthHidePasswords;
+    }
+    console.log(hide_password);
+    if (hide_password) {
+        var menus = document.getElementsByClassName("vertical menu ui")
+        if (menus.length !== 0) {
+            // Try to remove "stored passwords" link
+            for (m=0; m<menus.length; m++) {
+                links = menus[m].getElementsByTagName("a")
+                for (l=0; l<links.length; l++) {
+                    if (links[l].href === 'http://lk.educom.ru/passwords.html') {
+                        links[l].parentElement.removeChild(links[l]);
+                    }
+                }
+            }
+        }
+    }
+})

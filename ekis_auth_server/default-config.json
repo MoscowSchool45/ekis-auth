@@ -16,5 +16,11 @@
 
 	"ldap_scope": "subtree",
 
-	"username_handling": "@example.com"
+	"username_handling": "@example.com",
+
+	"client": {
+		"redirect": "http://lk.educom.ru/forms/active.html",
+		"hide_saved_passwords": true,
+		"system": "подключен к системе авторизации ГБОУ СОШ 9999"
+	}
 }
